@@ -453,6 +453,8 @@ static const CGFloat kXHUserNameLabelHeight = 20;
         }
         
         UIButton *avatarButton = [[UIButton alloc] initWithFrame:avatarButtonFrame];
+        avatarButton.layer.cornerRadius = avatarButtonFrame.size.width / 2.0;
+        avatarButton.layer.masksToBounds = YES;
         [avatarButton setImage:[self getAvatarPlaceholderImage] forState:UIControlStateNormal];
         [avatarButton addTarget:self action:@selector(avatarButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:avatarButton];
