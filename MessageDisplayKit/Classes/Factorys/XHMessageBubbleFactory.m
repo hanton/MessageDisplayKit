@@ -44,6 +44,7 @@
         case XHBubbleMessageMediaTypeVideo:
             messageTypeString = [messageTypeString stringByAppendingString:@"_Solid"];
             break;
+        case XHBubbleMessageMediaTypeCard:
         case XHBubbleMessageMediaTypeText:
         case XHBubbleMessageMediaTypeVoice:
             messageTypeString = [messageTypeString stringByAppendingString:@"_Solid"];

@@ -255,6 +255,11 @@ static const CGFloat kXHUserNameLabelHeight = 20;
             [self.messageBubbleView.bubbleImageView addGestureRecognizer:tapGestureRecognizer];
             break;
         }
+        case XHBubbleMessageMediaTypeCard: {
+          UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(sigleTapGestureRecognizerHandle:)];
+          [self.messageBubbleView.bubbleImageView addGestureRecognizer:tapGestureRecognizer];
+          break;
+        }
         default:
             break;
     }
@@ -550,7 +555,9 @@ static const CGFloat kXHUserNameLabelHeight = 20;
     self.messageBubbleView.voiceDurationLabel.text = nil;
     self.messageBubbleView.bubblePhotoImageView.messagePhoto = nil;
     self.messageBubbleView.geolocationsLabel.text = nil;
-    
+    self.messageBubbleView.cardImageView.image = nil;
+    self.messageBubbleView.cardContentLabel.text = nil;
+  
     self.userNameLabel.text = nil;
     [self.avatarButton setImage:nil forState:UIControlStateNormal];
     self.timestampLabel.text = nil;

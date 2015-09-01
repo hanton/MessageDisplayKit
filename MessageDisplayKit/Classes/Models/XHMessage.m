@@ -179,6 +179,25 @@
     return self;
 }
 
+- (instancetype)initWithCardTitle:(NSString *)title
+                            image:(UIImage *)image
+                          content:(NSString *)content
+                           sender:(NSString *)sender
+                        timestamp:(NSDate *)timestamp {
+  self = [super init];
+  if (self) {
+    self.cardTitle = title;
+    self.cardImage = image;
+    self.cardContent = content;
+    self.sender = sender;
+    self.senderName = sender;
+    self.timestamp = timestamp;
+    
+    self.messageMediaType = XHBubbleMessageMediaTypeCard;
+  }
+  return self;
+}
+
 - (void)dealloc {
     _text = nil;
     _textString = nil;
@@ -211,6 +230,10 @@
   
     _bubbleMessageType = nil;
     _isRead = nil;
+  
+    _cardTitle = nil;
+    _cardImage = nil;
+    _cardContent = nil;
 }
 
 #pragma mark - NSCoding
@@ -249,6 +272,10 @@
         _messageMediaType = [[aDecoder decodeObjectForKey:@"messageMediaType"] integerValue];
         _bubbleMessageType = [[aDecoder decodeObjectForKey:@"bubbleMessageType"] integerValue];
         _isRead = [[aDecoder decodeObjectForKey:@"isRead"] boolValue];
+      
+        _cardTitle = [aDecoder decodeObjectForKey:@"cardTitle"];
+        _cardImage = [aDecoder decodeObjectForKey:@"cardImage"];
+        _cardContent = [aDecoder decodeObjectForKey:@"cardContent"];
     }
     return self;
 }
@@ -286,6 +313,10 @@
     [aCoder encodeObject:[NSNumber numberWithInteger:self.messageMediaType] forKey:@"messageMediaType"];
     [aCoder encodeObject:[NSNumber numberWithInteger:self.bubbleMessageType] forKey:@"bubbleMessageType"];
     [aCoder encodeObject:[NSNumber numberWithBool:self.isRead] forKey:@"isRead"];
+  
+    [aCoder encodeObject:self.cardTitle forKey:@"cardTitle"];
+    [aCoder encodeObject:self.cardImage forKey:@"cardImage"];
+    [aCoder encodeObject:self.cardContent forKey:@"cardContent"];
 }
 
 #pragma mark - NSCopying
@@ -324,6 +355,12 @@
                                                                         location:[self.location copy]
                                                                           sender:[self.sender copy]
                                                                             timestamp:[self.timestamp copy]];
+        case XHBubbleMessageMediaTypeCard:
+        return [[[self class] allocWithZone:zone] initWithCardTitle:[self.cardTitle copy]
+                                                              image:[self.cardImage copy]
+                                                            content:[self.cardContent copy]
+                                                             sender:[self.sender copy]
+                                                          timestamp:[self.timestamp copy]];
         default:
             return nil;
     }

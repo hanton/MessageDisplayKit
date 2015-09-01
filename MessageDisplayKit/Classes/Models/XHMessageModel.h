@@ -38,6 +38,10 @@
 - (UIImage *)avatar;
 - (NSString *)avatarUrl;
 
+- (NSString *)cardTitle;
+- (UIImage *)cardImage;
+- (NSString *)cardContent;
+
 - (XHBubbleMessageMediaType)messageMediaType;
 
 - (XHBubbleMessageType)bubbleMessageType;

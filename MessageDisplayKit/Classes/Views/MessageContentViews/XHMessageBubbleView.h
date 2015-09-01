@@ -44,6 +44,17 @@
 @property (nonatomic, weak, readonly) SETextView *displayTextView;
 
 /**
+ *  用于显示卡片图片的控件
+ */
+@property (nonatomic, weak, readonly) UIImageView *cardImageView;
+
+
+/**
+ *  用于显示卡片内容的控件
+ */
+@property (nonatomic, weak, readonly) UILabel *cardContentLabel;
+
+/**
  *  用于显示气泡的ImageView控件
  */
 @property (nonatomic, weak, readonly) UIImageView *bubbleImageView;

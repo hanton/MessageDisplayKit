@@ -27,9 +27,15 @@
 
 #define kXHNoneBubblePhotoMargin (kXHHaveBubbleMargin - kXHBubblePhotoMargin) // 在没有气泡的时候，也就是在图片、视频、地理位置的时候，图片内部做了Margin，所以需要减去内部的Margin
 
+#define kCardContentHeight 34.0f  // 卡片内容的高度
+
 @interface XHMessageBubbleView ()
 
 @property (nonatomic, weak, readwrite) SETextView *displayTextView;
+
+@property (nonatomic, weak, readwrite) UIImageView *cardImageView;
+
+@property (nonatomic, weak, readwrite) UILabel *cardContentLabel;
 
 @property (nonatomic, weak, readwrite) UIImageView *bubbleImageView;
 
@@ -112,6 +118,11 @@
     return CGSizeMake(140, 140);
 }
 
+// 计算Card的高度
++ (CGSize)neededSizeForCard {
+    return CGSizeMake(220, 130);
+}
+
 // 计算Cell需要实际Message内容的大小
 + (CGFloat)calculateCellHeightWithMessage:(id <XHMessageModel>)message {
     CGSize size = [XHMessageBubbleView getBubbleFrameWithMessage:message];
@@ -155,6 +166,12 @@
             bubbleSize = CGSizeMake(localPostionSize.width, localPostionSize.height + kXHHaveBubblePhotoMargin * 2);
             break;
         }
+        case XHBubbleMessageMediaTypeCard: {
+            // 固定大小，必须的
+            CGSize cardSize = [XHMessageBubbleView neededSizeForCard];
+            bubbleSize = CGSizeMake(cardSize.width + kXHLeftTextHorizontalBubblePadding + kXHRightTextHorizontalBubblePadding + kXHArrowMarginWidth, cardSize.height + kXHHaveBubbleMargin * 4); //这里*4的原因是：气泡内部的文本也做了margin，而且margin的大小和气泡的margin一样大小，所以需要加上*2的间隙大小
+            break;
+      }
         default:
             break;
     }
@@ -231,10 +248,24 @@
     
     _voiceDurationLabel.hidden = YES;
     _voiceUnreadDotImageView.hidden = YES;
+    _cardImageView.hidden = YES;
     switch (currentType) {
         case XHBubbleMessageMediaTypeVoice: {
             _voiceDurationLabel.hidden = NO;
             _voiceUnreadDotImageView.hidden = message.isRead;
+        }
+        case XHBubbleMessageMediaTypeCard: {
+          _bubbleImageView.image = [XHMessageBubbleFactory bubbleImageViewForType:message.bubbleMessageType style:XHBubbleImageViewStyleWeChat meidaType:message.messageMediaType];
+          _bubbleImageView.hidden = NO;
+          _bubblePhotoImageView.hidden = YES;
+          // 如果是文本消息，那文本消息的控件需要显示
+          _displayTextView.hidden = NO;
+          // 如果是卡片消息，那卡片图片的控件需要显示
+          _cardImageView.hidden = NO;
+          // 那语言的gif动画imageView就需要隐藏了
+          _animationVoiceImageView.hidden = YES;
+          _emotionImageView.hidden = YES;
+          break;
         }
         case XHBubbleMessageMediaTypeText:
         case XHBubbleMessageMediaTypeEmotion: {
@@ -323,6 +354,11 @@
             
             _geolocationsLabel.text = message.geolocations;
             break;
+        case XHBubbleMessageMediaTypeCard:
+            _displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message.cardTitle];
+            _cardImageView.image = message.cardImage;
+            _cardContentLabel.text = [NSString stringWithFormat:@"  %@", message.cardContent];
+          break;
         default:
             break;
     }
@@ -432,6 +468,21 @@
             [self addSubview:voiceUnreadDotImageView];
             _voiceUnreadDotImageView = voiceUnreadDotImageView;
         }
+      
+        // 7. 初始化显示卡片的控件
+        if (!_cardImageView) {
+          // 卡片图片
+          UIImageView *cardImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+          // 卡片内容
+          UILabel *cardContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+          cardContentLabel.font = [UIFont systemFontOfSize:16];
+          cardContentLabel.textColor = [UIColor whiteColor];
+          cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+          [cardImageView addSubview:cardContentLabel];
+          _cardContentLabel = cardContentLabel;
+          [self addSubview:cardImageView];
+          _cardImageView = cardImageView;
+        }
     }
     return self;
 }
@@ -458,7 +509,11 @@
     _geolocationsLabel = nil;
     
     _font = nil;
+  
+    _cardImageView = nil;
     
+    _cardContentLabel = nil;
+  
 }
 
 - (void)layoutSubviews {
@@ -467,6 +522,36 @@
     XHBubbleMessageMediaType currentType = self.message.messageMediaType;
     
     switch (currentType) {
+        case XHBubbleMessageMediaTypeCard: {
+          // 获取实际气泡的大小
+          CGRect bubbleFrame = [self bubbleFrame];
+          self.bubbleImageView.frame = bubbleFrame;
+          
+          CGFloat textX = CGRectGetMinX(bubbleFrame) + kXHRightTextHorizontalBubblePadding;
+          if (self.message.bubbleMessageType == XHBubbleMessageTypeReceiving) {
+            textX = CGRectGetMinX(bubbleFrame) + kXHArrowMarginWidth + kXHLeftTextHorizontalBubblePadding;
+          }
+          
+          CGRect textFrame = CGRectMake(textX - 2,
+                                        CGRectGetMinY(bubbleFrame) + kXHHaveBubbleMargin,
+                                        CGRectGetWidth(bubbleFrame) - kXHLeftTextHorizontalBubblePadding - kXHRightTextHorizontalBubblePadding - kXHArrowMarginWidth,
+                                        16);
+          
+          self.displayTextView.frame = CGRectIntegral(textFrame);
+          
+          CGRect cardImageFrame = CGRectMake(textX - 2,
+                                            CGRectGetMinY(bubbleFrame) + kXHHaveBubbleMargin + 16 + 4,
+                                            CGRectGetWidth(bubbleFrame) - kXHLeftTextHorizontalBubblePadding - kXHRightTextHorizontalBubblePadding - kXHArrowMarginWidth + 8.0,
+                                            bubbleFrame.size.height - kXHHaveBubbleMargin * 2 - 16);
+          self.cardImageView.frame = cardImageFrame;
+          
+          CGRect cardContentFrame = CGRectMake(0,
+                                              CGRectGetHeight(cardImageFrame) - kCardContentHeight,
+                                              CGRectGetWidth(cardImageFrame),
+                                              kCardContentHeight);
+          self.cardContentLabel.frame = cardContentFrame;
+          break;
+        }
         case XHBubbleMessageMediaTypeText:
         case XHBubbleMessageMediaTypeVoice:
         case XHBubbleMessageMediaTypeEmotion: {

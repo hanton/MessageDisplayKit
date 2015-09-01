@@ -39,6 +39,10 @@
 @property (nonatomic, copy) NSString *sender;
 @property (nonatomic, copy) NSString *senderName;
 
+@property (nonatomic, copy) NSString *cardTitle;
+@property (nonatomic, strong) UIImage *cardImage;
+@property (nonatomic, copy) NSString *cardContent;
+
 @property (nonatomic, strong) NSDate *timestamp;
 
 @property (nonatomic, assign) BOOL shouldShowUserName;
@@ -164,5 +168,21 @@
                                   location:(CLLocation *)location
                           sender:(NSString *)sender
                             timestamp:(NSDate *)timestamp;
+
+/**
+ *  初始化卡片类型的消息
+ *
+ *  @param text           发送的目标文本
+ *  @param originPhotoUrl 目标图片在服务器的原图地址
+ *  @param sender         发送者
+ *  @param date           发送时间
+ *
+ *  @return 返回Message model 对象
+ */
+- (instancetype)initWithCardTitle:(NSString *)title
+                            image:(UIImage *)image
+                          content:(NSString *)content
+                           sender:(NSString *)sender
+                        timestamp:(NSDate *)timestamp;
 
 @end
