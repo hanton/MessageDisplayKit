@@ -475,7 +475,7 @@
           UIImageView *cardImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
           // 卡片内容
           UILabel *cardContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-          cardContentLabel.font = [UIFont systemFontOfSize:16];
+          cardContentLabel.font = [UIFont systemFontOfSize:13];
           cardContentLabel.textColor = [UIColor whiteColor];
           cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
           [cardImageView addSubview:cardContentLabel];
