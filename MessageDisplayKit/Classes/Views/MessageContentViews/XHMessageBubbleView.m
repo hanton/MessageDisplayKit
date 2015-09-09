@@ -120,7 +120,7 @@
 
 // 计算Card的高度
 + (CGSize)neededSizeForCard {
-    return CGSizeMake(220, 130);
+    return CGSizeMake(180, 120);
 }
 
 // 计算Cell需要实际Message内容的大小
@@ -168,8 +168,9 @@
         }
         case XHBubbleMessageMediaTypeCard: {
             // 固定大小，必须的
+            CGFloat oneLineTextHeight = 16.0;
             CGSize cardSize = [XHMessageBubbleView neededSizeForCard];
-            bubbleSize = CGSizeMake(cardSize.width + kXHLeftTextHorizontalBubblePadding + kXHRightTextHorizontalBubblePadding + kXHArrowMarginWidth, cardSize.height + kXHHaveBubbleMargin * 4); //这里*4的原因是：气泡内部的文本也做了margin，而且margin的大小和气泡的margin一样大小，所以需要加上*2的间隙大小
+            bubbleSize = CGSizeMake(cardSize.width + kXHLeftTextHorizontalBubblePadding + kXHRightTextHorizontalBubblePadding + kXHArrowMarginWidth, cardSize.height + kXHHaveBubbleMargin * 2 + kXHTopAndBottomBubbleMargin * 2 + oneLineTextHeight + kXHHaveBubbleMargin); //这里*4的原因是：气泡内部的文本也做了margin，而且margin的大小和气泡的margin一样大小，所以需要加上*2的间隙大小
             break;
       }
         default:
@@ -357,7 +358,7 @@
         case XHBubbleMessageMediaTypeCard:
             _displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message.cardTitle];
             _cardImageView.image = message.cardImage;
-            _cardContentLabel.text = [NSString stringWithFormat:@"  %@", message.cardContent];
+            _cardContentLabel.text = [NSString stringWithFormat:@" %@", message.cardContent];
           break;
         default:
             break;
@@ -477,7 +478,7 @@
           UILabel *cardContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
           cardContentLabel.font = [UIFont systemFontOfSize:13];
           cardContentLabel.textColor = [UIColor whiteColor];
-          cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+          cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
           [cardImageView addSubview:cardContentLabel];
           _cardContentLabel = cardContentLabel;
           [self addSubview:cardImageView];
@@ -532,17 +533,19 @@
             textX = CGRectGetMinX(bubbleFrame) + kXHArrowMarginWidth + kXHLeftTextHorizontalBubblePadding;
           }
           
-          CGRect textFrame = CGRectMake(textX - 2,
-                                        CGRectGetMinY(bubbleFrame) + kXHHaveBubbleMargin,
+          CGFloat oneLineTextHeight = 16.0;
+          CGRect textFrame = CGRectMake(textX,
+                                        CGRectGetMinY(bubbleFrame) + kXHTopAndBottomBubbleMargin,
                                         CGRectGetWidth(bubbleFrame) - kXHLeftTextHorizontalBubblePadding - kXHRightTextHorizontalBubblePadding - kXHArrowMarginWidth,
-                                        16);
+                                        oneLineTextHeight);
           
           self.displayTextView.frame = CGRectIntegral(textFrame);
           
-          CGRect cardImageFrame = CGRectMake(textX - 2,
-                                            CGRectGetMinY(bubbleFrame) + kXHHaveBubbleMargin + 16 + 4,
-                                            CGRectGetWidth(bubbleFrame) - kXHLeftTextHorizontalBubblePadding - kXHRightTextHorizontalBubblePadding - kXHArrowMarginWidth + 8.0,
-                                            bubbleFrame.size.height - kXHHaveBubbleMargin * 2 - 16);
+          CGSize cardSize = [XHMessageBubbleView neededSizeForCard];
+          CGRect cardImageFrame = CGRectMake(textX,
+                                            CGRectGetMaxY(textFrame) + kXHHaveBubbleMargin,
+                                            cardSize.width,
+                                            cardSize.height);
           self.cardImageView.frame = cardImageFrame;
           
           CGRect cardContentFrame = CGRectMake(0,
