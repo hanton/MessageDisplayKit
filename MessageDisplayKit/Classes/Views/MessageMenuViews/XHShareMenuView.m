@@ -215,10 +215,17 @@
 }
 
 - (void)dealloc {
+<<<<<<< HEAD
     _shareMenuItems = nil;
     _shareMenuScrollView.delegate = nil;
     _shareMenuScrollView = nil;
     _shareMenuPageControl = nil;
+=======
+    self.shareMenuItems = nil;
+//    self.shareMenuScrollView.delegate = self;
+    self.shareMenuScrollView = nil;
+    self.shareMenuPageControl = nil;
+>>>>>>> Resize new system font
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {

@@ -120,7 +120,7 @@
 
 // 计算Card的高度
 + (CGSize)neededSizeForCard {
-    return CGSizeMake(180, 120);
+    return CGSizeMake(180, 100);
 }
 
 // 计算Cell需要实际Message内容的大小
@@ -359,7 +359,7 @@
             _displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message.cardTitle];
             _cardImageView.image = message.cardImage;
             _cardContentLabel.text = [NSString stringWithFormat:@" %@", message.cardContent];
-          break;
+            break;
         default:
             break;
     }
@@ -476,7 +476,7 @@
           UIImageView *cardImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
           // 卡片内容
           UILabel *cardContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-          cardContentLabel.font = [UIFont systemFontOfSize:13];
+          cardContentLabel.font = [UIFont systemFontOfSize:11];
           cardContentLabel.textColor = [UIColor whiteColor];
           cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
           [cardImageView addSubview:cardContentLabel];
@@ -533,7 +533,7 @@
             textX = CGRectGetMinX(bubbleFrame) + kXHArrowMarginWidth + kXHLeftTextHorizontalBubblePadding;
           }
           
-          CGFloat oneLineTextHeight = 16.0;
+          CGFloat oneLineTextHeight = 20.0;
           CGRect textFrame = CGRectMake(textX,
                                         CGRectGetMinY(bubbleFrame) + kXHTopAndBottomBubbleMargin,
                                         CGRectGetWidth(bubbleFrame) - kXHLeftTextHorizontalBubblePadding - kXHRightTextHorizontalBubblePadding - kXHArrowMarginWidth,
@@ -552,7 +552,7 @@
                                               CGRectGetHeight(cardImageFrame) - kCardContentHeight,
                                               CGRectGetWidth(cardImageFrame),
                                               kCardContentHeight);
-          self.cardContentLabel.frame = cardContentFrame;
+          self.cardContentLabel.frame = CGRectIntegral(cardContentFrame);
           break;
         }
         case XHBubbleMessageMediaTypeText:
