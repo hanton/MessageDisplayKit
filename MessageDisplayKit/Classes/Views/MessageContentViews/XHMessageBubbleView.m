@@ -251,10 +251,6 @@
     _voiceUnreadDotImageView.hidden = YES;
     _cardImageView.hidden = YES;
     switch (currentType) {
-        case XHBubbleMessageMediaTypeVoice: {
-            _voiceDurationLabel.hidden = NO;
-            _voiceUnreadDotImageView.hidden = message.isRead;
-        }
         case XHBubbleMessageMediaTypeCard: {
           _bubbleImageView.image = [XHMessageBubbleFactory bubbleImageViewForType:message.bubbleMessageType style:XHBubbleImageViewStyleWeChat meidaType:message.messageMediaType];
           _bubbleImageView.hidden = NO;
@@ -267,6 +263,10 @@
           _animationVoiceImageView.hidden = YES;
           _emotionImageView.hidden = YES;
           break;
+        }
+        case XHBubbleMessageMediaTypeVoice: {
+          _voiceDurationLabel.hidden = NO;
+          _voiceUnreadDotImageView.hidden = message.isRead;
         }
         case XHBubbleMessageMediaTypeText:
         case XHBubbleMessageMediaTypeEmotion: {
