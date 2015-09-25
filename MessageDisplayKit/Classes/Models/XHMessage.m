@@ -228,9 +228,6 @@
   
     _timestamp = nil;
   
-    _bubbleMessageType = nil;
-    _isRead = nil;
-  
     _cardTitle = nil;
     _cardImage = nil;
     _cardContent = nil;

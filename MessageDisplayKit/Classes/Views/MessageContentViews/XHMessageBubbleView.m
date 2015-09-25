@@ -65,8 +65,12 @@
 + (CGFloat)neededWidthForText:(NSString *)text {
     UIFont *systemFont = [[XHMessageBubbleView appearance] font];
     CGSize textSize = CGSizeMake(CGFLOAT_MAX, 20); // rough accessory size
-    CGSize sizeWithFont = [text sizeWithFont:systemFont constrainedToSize:textSize lineBreakMode:NSLineBreakByWordWrapping];
-    
+    CGSize sizeWithFont = [text boundingRectWithSize:textSize
+                                             options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading
+                                          attributes:@{NSFontAttributeName: systemFont}
+                                             context:nil].size;
+//    CGSize sizeWithFont = [text sizeWithFont:systemFont constrainedToSize:textSize lineBreakMode:NSLineBreakByWordWrapping];
+  
 #if defined(__LP64__) && __LP64__
     return ceil(sizeWithFont.width);
 #else
@@ -476,7 +480,7 @@
           UIImageView *cardImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
           // 卡片内容
           UILabel *cardContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-          cardContentLabel.font = [UIFont systemFontOfSize:11];
+          cardContentLabel.font = [UIFont systemFontOfSize:12];
           cardContentLabel.textColor = [UIColor whiteColor];
           cardContentLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
           [cardImageView addSubview:cardContentLabel];

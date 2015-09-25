@@ -26,12 +26,12 @@
 
 - (void)loadLocations {
     CLLocationCoordinate2D coord = [self.message.location coordinate];
-    CLRegion *newRegion = [[CLRegion alloc] initCircularRegionWithCenter:coord
+    CLCircularRegion *newRegion = [[CLCircularRegion alloc] initWithCenter:coord
                                                                   radius:10.0
                                                               identifier:[NSString stringWithFormat:@"%f, %f", coord.latitude, coord.longitude]];
     
     // Create an annotation to show where the region is located on the map.
-    XHAnnotation *myRegionAnnotation = [[XHAnnotation alloc] initWithCLRegion:newRegion title:NSLocalizedStringFromTable(@"MessageLocation", @"MessageDisplayKitString", nil) subtitle:self.message.geolocations];
+    XHAnnotation *myRegionAnnotation = [[XHAnnotation alloc] initWithCLCircularRegion:newRegion title:NSLocalizedStringFromTable(@"MessageLocation", @"MessageDisplayKitString", nil) subtitle:self.message.geolocations];
     myRegionAnnotation.coordinate = newRegion.center;
     myRegionAnnotation.radius = newRegion.radius;
     
