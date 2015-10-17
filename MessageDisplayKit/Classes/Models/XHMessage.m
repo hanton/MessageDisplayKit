@@ -363,4 +363,9 @@
     }
 }
 
+-(NSString *)description {
+  NSString *output = [NSString stringWithFormat:@"text: %@\ntextString: %@\nphoto: %@\nthumbnailUrl: %@\noriginPhotoUrl: %@\nvoicePath: %@\nvoiceUrl: %@\nvoiceDuration: %@\navatar: %@\navatarUrl: %@\nsender: %@\nsenderName: %@\ntimestamp: %@\ncardTitle: %@\ncardImage: %@\ncardContent: %@", _text, _textString, _photo, _thumbnailUrl, _originPhotoUrl, _voicePath, _voiceUrl, _voiceDuration, _avatar, _avatarUrl, _sender, _senderName, _timestamp, _cardTitle, _cardImage, _cardContent];
+  return output;
+}
+
 @end
